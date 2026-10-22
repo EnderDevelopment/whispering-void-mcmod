@@ -1,0 +1,99 @@
+plugins {
+    id 'net.neoforged.gradle.userdev' version '6.0.122'
+    id 'maven-publish'
+    id 'eclipse'
+    id 'idea'
+}
+
+repositories {
+    maven {
+        url = "https://maven.neoforged.net/releases"
+    }
+    mavenCentral()
+    maven {
+        name = "forge"
+        url = "https://files.minecraftforge.net/maven"
+    }
+    maven {
+        name = "neoforge"
+        url = "https://maven.neoforged.net/releases"
+    }
+}
+
+dependencies {
+    minecraft "net.neoforged:neoforge:${loader_version}"
+    minecraft "net.minecraft:client:${minecraft_version}-sources"
+    minecraft "net.minecraft:server:${minecraft_version}-sources"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src/main/java"
+        }
+        resources {
+            srcDir "src/main/resources"
+        }
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft_version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+        expand 'version':project.version, 'mcversion':project.minecraft_version
+    }
+}
+
+jar {
+    archiveFileName = "${archives_base_name}-${version}.jar"
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += ['-Dfile.encoding=UTF-8']
+}
+
+tasks.withType(SourceSetOutput) {
+    outputDir = file("${buildDir}/sources/${project.name}/${name}")
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+tasks.named('genIntellijRuns') {
+    mustRunAfter 'build'
+}
+
+tasks.named('genEclipseRuns') {
+    mustRunAfter 'build'
+}
+
+tasks.named('idea') {
+    mustRunAfter 'genIntellijRuns'
+}
+
+tasks.named('eclipse') {
+    mustRunAfter 'genEclipseRuns'
+}
+
+tasks.named('build') {
+    dependsOn 'jar'
+}
+
+tasks.named('runClient') {
+    dependsOn 'jar'
+}
+
+tasks.named('runServer') {
+    dependsOn 'jar'
+}
+
+tasks.named('runData') {
+    dependsOn 'jar'
+}

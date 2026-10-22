@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[${loader_version},)"
+license="All rights reserved"
+
+[[mods]]
+modId="whisperingvoid"
+version="${version}"
+displayName="Whispering Void"
+description='''A psychological horror mod featuring the Whispering Void entity.'''
+
+[[dependencies.whisperingvoid]]
+modId="neoforge"
+type="required"
+versionRange="[${loader_version},)"
+ordering="NONE"
+side="BOTH"

@@ -1,0 +1,5 @@
+[general]
+spawn_rate = 0.001
+max_health = 20.0
+attack_damage = 5.0
+abilities = ["ability1", "ability2", "ability3", "ability4", "ability5"]
